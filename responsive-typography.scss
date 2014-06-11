@@ -1,0 +1,41 @@
+$debug: false;
+
+// Variables
+$responsive-typography__max-width: 1440px !default;
+$responsive-typography__small-screen-width: 480px !default;
+$responsive-typography__base-html-font-size: 87.5% !default;
+$responsive-typography__step: 10px !default;
+$responsive-typography__font-size-step: 1% !default;
+
+@mixin responsive-typography {
+  $steps: ($responsive-typography__max-width - $responsive-typography__small-screen-width) / $responsive-typography__step;
+
+  @for $step-i from 0 through $steps {
+    $viewport-width: $responsive-typography__small-screen-width + $step-i * $responsive-typography__step;
+    $font-size: $responsive-typography__base-html-font-size + $step-i * $responsive-typography__font-size-step;
+
+    // set's the html font-size
+    @media (min-width: $viewport-width) {
+      font-size: $font-size;
+
+      @if ($debug) {
+        &:before {
+          content: "min-width: #{$viewport-width}, font-size: #{$font-size} step: #{$step-i}";
+        }
+      }
+    }
+  }
+
+  @if ($debug) {
+    &:before {
+      position: fixed;
+      top: 1rem;
+      left: 1rem;
+      color: red;
+    }
+  }
+}
+
+html {
+  @include responsive-typography;
+}
